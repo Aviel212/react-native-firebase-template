@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen, HomeScreen, RegistrationScreen } from "./src/screens";
 import { decode, encode } from "base-64";
 import { firebase } from "./src/firebase/config";
+import { ActivityIndicator, View } from "react-native";
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -27,7 +28,11 @@ export default function App() {
   }, []);
 
   if (loading) {
-    return <>Loadingggg</>;
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
   }
 
   return (
