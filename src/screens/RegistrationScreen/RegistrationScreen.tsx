@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
+import { Button } from "../common/Button/Button";
 
 export default function RegistrationScreen({ navigation }: any) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onFooterLinkPress = () => {
     navigation.navigate("Login");
@@ -19,6 +21,7 @@ export default function RegistrationScreen({ navigation }: any) {
       alert("Passwords don't match.");
       return;
     }
+    setIsLoading(true);
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -42,7 +45,8 @@ export default function RegistrationScreen({ navigation }: any) {
       })
       .catch((error) => {
         alert(error);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -93,12 +97,11 @@ export default function RegistrationScreen({ navigation }: any) {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => onRegisterPress()}
-        >
-          <Text style={styles.buttonTitle}>Create account</Text>
-        </TouchableOpacity>
+        <Button
+          onPress={onRegisterPress}
+          isLoading={isLoading}
+          text="Create account"
+        />
         <View style={styles.footerView}>
           <Text style={styles.footerText}>
             Already got an account?{" "}

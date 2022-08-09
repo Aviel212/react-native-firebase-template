@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
+import { Button } from "../common/Button/Button";
 
 export default function LoginScreen({ navigation, setUser }: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onFooterLinkPress = () => {
     navigation.navigate("Registration");
   };
 
   const onLoginPress = () => {
+    setIsLoading(true);
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
@@ -22,7 +25,8 @@ export default function LoginScreen({ navigation, setUser }: any) {
       })
       .catch((error) => {
         alert(error);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -54,9 +58,7 @@ export default function LoginScreen({ navigation, setUser }: any) {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
-          <Text style={styles.buttonTitle}>Log in</Text>
-        </TouchableOpacity>
+        <Button onPress={onLoginPress} isLoading={isLoading} text="Log in" />
         <View style={styles.footerView}>
           <Text style={styles.footerText}>
             Don't have an account?{" "}

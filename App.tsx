@@ -23,6 +23,8 @@ export default function App() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) setUser({ id: user.uid, email: user.email });
+      else setUser(null);
+
       setLoading(false);
     });
   }, []);
